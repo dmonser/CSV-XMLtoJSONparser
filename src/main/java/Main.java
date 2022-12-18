@@ -9,7 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.w3c.dom.Document;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -41,8 +41,9 @@ public class Main {
     }
 
     public static String listToJson (List<Employee> list){
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
 
         Type listType = new TypeToken<List<Employee>>() {}.getType();
 
@@ -59,18 +60,42 @@ public class Main {
         }
     }
 
-    public static List<Employee> parseXml(String path) throws ParserConfigurationException {
-       List<Employee> staff = null;
-
+    public static void parseXml(String path) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        try {
-            Document doc = builder.parse(new File(path));
-        } catch (SAXException | IOException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            Document doc = builder.parse(new File(path));
+//            Node root = doc.getDocumentElement();
+//            System.out.println("Корневой элемент: " + root.getNodeName());
+//            readNode(root);
+//        } catch (SAXException | IOException e) {
+//            throw new RuntimeException(e);
+//        }
+        Document doc = builder.parse(new File(path));
+        Node root = doc.getDocumentElement();
+        System.out.println("Корневой элемент: " + root.getNodeName());
+        readNode(root);
+    }
 
-        return staff;
+    public static void readNode(Node node){
+        NodeList nodeList = node.getChildNodes();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node_ = nodeList.item(i);
+            if (Node.ELEMENT_NODE == node_.getNodeType()) {
+                System.out.println("Текущий узел: " + node_.getNodeName());
+
+                Element element = (Element) node_;
+
+                NamedNodeMap map = element.getAttributes();
+                for (int j = 0; j < map.getLength(); j++) {
+                    String attrName = map.item(j).getNodeName();
+                    String attrValue = map.item(j).getNodeValue();
+                    System.out.println("Атрибут: " + attrName + "; значение: " + attrValue);
+                }
+                readNode(node_);
+            }
+        }
     }
 
     public static void main(String[] args) throws Exception {
@@ -84,7 +109,7 @@ public class Main {
 
         writeString(json, "data.json");
 
-//        List<Employee> listXml =
+        parseXml("data.xml");
     }
 
 }
