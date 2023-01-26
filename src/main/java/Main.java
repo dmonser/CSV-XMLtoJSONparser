@@ -60,21 +60,17 @@ public class Main {
         }
     }
 
-    public static void parseXml(String path) throws ParserConfigurationException, IOException, SAXException {
+    public static List<Employee> parseXml(String path) throws ParserConfigurationException, IOException, SAXException {
+        List<Employee> staff = null;
+
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-//        try {
-//            Document doc = builder.parse(new File(path));
-//            Node root = doc.getDocumentElement();
-//            System.out.println("Корневой элемент: " + root.getNodeName());
-//            readNode(root);
-//        } catch (SAXException | IOException e) {
-//            throw new RuntimeException(e);
-//        }
         Document doc = builder.parse(new File(path));
         Node root = doc.getDocumentElement();
         System.out.println("Корневой элемент: " + root.getNodeName());
         readNode(root);
+        
+        return staff;
     }
 
     public static void readNode(Node node){
@@ -82,17 +78,18 @@ public class Main {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node_ = nodeList.item(i);
+
             if (Node.ELEMENT_NODE == node_.getNodeType()) {
                 System.out.println("Текущий узел: " + node_.getNodeName());
-
                 Element element = (Element) node_;
-
                 NamedNodeMap map = element.getAttributes();
+
                 for (int j = 0; j < map.getLength(); j++) {
                     String attrName = map.item(j).getNodeName();
                     String attrValue = map.item(j).getNodeValue();
                     System.out.println("Атрибут: " + attrName + "; значение: " + attrValue);
                 }
+
                 readNode(node_);
             }
         }
@@ -109,7 +106,7 @@ public class Main {
 
         writeString(json, "data.json");
 
-        parseXml("data.xml");
+        List<Employee> list2 = parseXml("data.xml");
     }
 
 }
