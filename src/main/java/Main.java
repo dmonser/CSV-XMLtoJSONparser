@@ -60,20 +60,20 @@ public class Main {
         }
     }
 
-    public static List<Employee> parseXml(String path) throws ParserConfigurationException, IOException, SAXException {
-        List<Employee> staff = null;
+    public static void /*List<Employee>*/ parseXML(String path) throws ParserConfigurationException, IOException, SAXException {
+//        List<Employee> staff = null;
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(new File(path));
+
         Node root = doc.getDocumentElement();
-        System.out.println("Корневой элемент: " + root.getNodeName());
-        readNode(root);
-        
-        return staff;
+        System.out.println("Корневой элемент " + root.getNodeName());
+        read(root);
+//        return staff;
     }
 
-    public static void readNode(Node node){
+    private static void read(Node node) {
         NodeList nodeList = node.getChildNodes();
 
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -84,29 +84,31 @@ public class Main {
                 Element element = (Element) node_;
                 NamedNodeMap map = element.getAttributes();
 
-                for (int j = 0; j < map.getLength(); j++) {
-                    String attrName = map.item(j).getNodeName();
-                    String attrValue = map.item(j).getNodeValue();
+                for (int a = 0; a < map.getLength(); a++) {
+                    String attrName = map.item(a).getNodeName();
+                    String attrValue = map.item(a).getNodeValue();
                     System.out.println("Атрибут: " + attrName + "; значение: " + attrValue);
                 }
 
-                readNode(node_);
+                read(node_);
             }
         }
     }
 
+
     public static void main(String[] args) throws Exception {
 
-        String[] columnMapping = {"id", "firstName", "lastName", "country", "age"};
-        String fileName = "data.csv";
+//        String[] columnMapping = {"id", "firstName", "lastName", "country", "age"};
+//        String fileName = "data.csv";
+//
+//        List<Employee> list = parseCSV(columnMapping, fileName);
+//
+//        String json = listToJson(list);
+//
+//        writeString(json, "data.json");
 
-        List<Employee> list = parseCSV(columnMapping, fileName);
-
-        String json = listToJson(list);
-
-        writeString(json, "data.json");
-
-        List<Employee> list2 = parseXml("data.xml");
+//        List<Employee> list2 = parseXML("data.xml");
+        parseXML("data.xml");
     }
 
 }
