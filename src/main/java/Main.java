@@ -98,17 +98,14 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-//        String[] columnMapping = {"id", "firstName", "lastName", "country", "age"};
-//        String fileName = "data.csv";
-//
-//        List<Employee> list = parseCSV(columnMapping, fileName);
-//
-//        String json = listToJson(list);
-//
-//        writeString(json, "data.json");
+        String[] columnMapping = {"id", "firstName", "lastName", "country", "age"};
+        String fileName = "data.csv";
 
-//        List<Employee> list2 = parseXML("data.xml");
-        parseXML("data.xml");
+        List<Employee> list = parseCSV(columnMapping, fileName);
+
+        String json = listToJson(list);
+
+        writeString(json, "data.json");
     }
 
 }
